@@ -40,11 +40,11 @@ def load_service_yamls(name, content, **vars):
     rendered = renders(name, content, **vars)
     try:
         return service_info.load(name, rendered)
-    except SchemaError, e:
+    except SchemaError as e:
         _dump_and_raise(rendered, TaskError(str(e)))
-    except yaml.parser.ParserError, e:
+    except yaml.parser.ParserError as e:
         _dump_and_raise(rendered, e)
-    except yaml.scanner.ScannerError, e:
+    except yaml.scanner.ScannerError as e:
         _dump_and_raise(rendered, e)
 
 def get_ignores(directory):
@@ -75,9 +75,9 @@ def get_search_path(forge, svc):
 def is_service_descriptor(path):
     try:
         objs = yamlutil.load(path)
-    except yaml.parser.ParserError, e:
+    except yaml.parser.ParserError as e:
         return True
-    except yaml.scanner.ScannerError, e:
+    except yaml.scanner.ScannerError as e:
         return True
     if objs:
         first = objs[0]
@@ -197,7 +197,7 @@ def shafiles(root, files):
         try:
             with open(os.path.join(root, name)) as fd:
                 result.update(fd.read())
-        except IOError, e:
+        except IOError as e:
             if e.errno != errno.ENOENT:
                 raise
     return result.hexdigest()
@@ -378,7 +378,7 @@ class Service(object):
     @property
     def requires(self):
         value = self.info().get("requires", ())
-        if isinstance(value, basestring):
+        if isinstance(value, str):
             return [value]
         else:
             return value
@@ -388,7 +388,7 @@ class Service(object):
         info = self.info()
         containers = info.get("containers", self.dockerfiles)
         for idx, c in enumerate(containers):
-            if isinstance(c, basestring):
+            if isinstance(c, str):
                 yield Container(self, c, index=idx)
             else:
                 yield Container(self, c["dockerfile"], c.get("context", None), c.get("args", None),

@@ -32,7 +32,14 @@ from .service import Discovery, Service
 from .jinja2 import renders
 from .istio import istio
 
-from scout import Scout
+# scout.py is no longer maintained and incompatible with Python 3.12+
+# Make it optional to avoid breaking the application
+try:
+    from scout import Scout
+    SCOUT_AVAILABLE = True
+except (ImportError, AttributeError):
+    SCOUT_AVAILABLE = False
+
 from . import __version__
 
 SETUP_TEMPLATE = """# Global forge configuration
@@ -62,7 +69,7 @@ class Forge(object):
         if optional:
             msg += ' (use "-" to leave unspecified)'
         prompt = "%s: " % msg if default is None else "%s[%s]: " % (msg, default)
-        prompter = raw_input if echo else lambda: getpass.getpass("")
+        prompter = input if echo else lambda: getpass.getpass("")
 
         while True:
             task.echo(prompt, newline=False)
@@ -84,8 +91,14 @@ class Forge(object):
     @task(context="setup")
     def setup(self):
         with task.verbose(True):
-            scout = Scout("forge", __version__)
-            scout_res = scout.report()
+            # Only use Scout if available
+            if SCOUT_AVAILABLE:
+                try:
+                    scout = Scout("forge", __version__)
+                    scout_res = scout.report()
+                except Exception:
+                    # Silently ignore scout errors
+                    pass
 
             task.echo(self.terminal.bold("== Checking Kubernetes Setup =="))
             task.echo()
@@ -274,7 +287,7 @@ class Forge(object):
 
         try:
             conf = config.load(self.config)
-        except config.SchemaError, e:
+        except config.SchemaError as e:
             raise TaskError(str(e))
 
         self.base = os.path.dirname(os.path.abspath(self.config))
@@ -306,7 +319,7 @@ class Forge(object):
             raise TaskError("no service found")
         else:
             svc = self.discovery.services[services[0]]
-            print yaml.dump(svc.metadata(), encoding='utf-8')
+            print(yaml.dump(svc.metadata()))
 
     @task()
     def clean(self, service):
@@ -380,6 +393,6 @@ def file_contents(path):
     try:
         with open(os.path.expanduser(os.path.expandvars(path)), "read") as fd:
             return fd.read()
-    except IOError, e:
-        print "  %s" % e
+    except IOError as e:
+        print("  %s" % e)
         return None

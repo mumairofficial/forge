@@ -188,13 +188,13 @@ class Schema(object):
         "Default data loder. Reports an exception."
         raise SchemaError("expecting %s, got %s\n%s" % (self.name, _tag(node), node.start_mark))
 
-    @match(basestring)
+    @match(str)
     def load(self, name):
         "Load data from a json or yaml file."
         with open(name) as fd:
             return self.load(name, fd.read())
 
-    @match(basestring, basestring)
+    @match(str, str)
     def load(self, name, input):
         "Load data from json or yaml input. The supplied name will appear as the filename in error messages."
         stream = StringIO.StringIO(input)
@@ -416,7 +416,7 @@ OMIT = object()
 
 class Field(object):
 
-    @match(basestring, Schema, opt(basestring), opt(basestring), opt(object))
+    @match(str, Schema, opt(str), opt(str), opt(object))
     def __init__(self, name, type, alias=None, docs=None, default=REQUIRED):
         self.name = name
         self.type = type
@@ -456,7 +456,7 @@ class Any(Schema):
 
 class Class(Schema):
 
-    @match(basestring, basestring, object, many(Field))
+    @match(str, str, object, many(Field))
     def __init__(self, name, docs, constructor, *fields, **kwargs):
         self.name = name
         self.docs = docs
@@ -473,7 +473,7 @@ class Class(Schema):
         if kwargs:
             raise TypeError("no such arg(s): %s" % ", ".join(kwargs.keys()))
 
-    @match(basestring, object, many(Field))
+    @match(str, object, many(Field))
     def __init__(self, name, constructor, *fields):
         self.__init__(name, "", constructor, *fields)
 
@@ -499,7 +499,7 @@ class Class(Schema):
                     loaded[key] = f.default
         try:
             return self.constructor(**loaded)
-        except SchemaError, e:
+        except SchemaError as e:
             raise SchemaError("%s\n\n%s" % (e, node.start_mark))
 
     @property
@@ -519,12 +519,12 @@ class Class(Schema):
             if isinstance(t, Class):
                 types[t] = t.render()
         for k, v in types.items():
-            print '<div id="%s">' % k.name.replace(":", "_")
-            print '<h2>%s</h2>' % k.name
-            print
-            print v
-            print
-            print '</div>'
+            print('<div id="%s">' % k.name.replace(":", "_"))
+            print('<h2>%s</h2>' % k.name)
+            print()
+            print(v)
+            print()
+            print('</div>')
 
     def render(self):
         result = []

@@ -41,8 +41,8 @@ password: >
         tree = {}
 
     root = mktree(tree, TEST_ID=TEST_ID)
-    print "TEST_ID: %s" % TEST_ID
-    print "TEST_BASE: %s" % root
+    print(")TEST_ID: %s" % TEST_ID
+    print(")TEST_BASE: %s" % root
 
     with open(test_spec) as fd:
         ops = fd.read()
@@ -112,7 +112,7 @@ class Runner(object):
     def do_RUN(self, arg):
         self.wait()
         arg = arg.replace("TEST_ID", TEST_ID).replace("TEST_BASE", self.base)
-        print "RUN", arg
+        print(")RUN", arg
         self.child = pexpect.spawn("sh", ["-c", arg], cwd=self.cwd, env=self.environ)
         self.child.logfile = sys.stdout
 
@@ -162,12 +162,12 @@ class Runner(object):
         output = self.child.before.strip()
         defuzzed = defuzz(output.replace(TEST_ID, "TEST_ID").replace(self.base, "TEST_BASE"))
         if not match(defuzzed, pattern.strip()):
-            print "OUTPUT:"
-            print output
-            print "DEFUZZED OUTPUT:"
-            print defuzzed
-            print "PATTERN:"
-            print pattern
+            print(")OUTPUT:"
+            print(o)utput
+            print(")DEFUZZED OUTPUT:"
+            print(d)efuzzed
+            print(")PATTERN:"
+            print(p)attern
             assert False
 
     def do_FILE(self, name, body):

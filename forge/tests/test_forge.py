@@ -325,7 +325,7 @@ print("hello")
 
 def load_metadata(directory):
     result = sh("forge", "build", "metadata", cwd=directory)
-    return yaml.load(result.output)
+    return yaml.load(result.output, Loader=yaml.FullLoader)
 
 def run_image(directory):
     md = load_metadata(directory)

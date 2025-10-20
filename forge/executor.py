@@ -89,7 +89,11 @@ class Result(object):
     def get(self):
         self.wait()
         if self.value is ERROR:
-            raise self.exception[0], self.exception[1], self.exception[2]
+            exc_type, exc_value, exc_tb = self.exception
+            if exc_tb is not None:
+                raise exc_value.with_traceback(exc_tb)
+            else:
+                raise exc_value
         else:
             return self.value
 
@@ -123,7 +127,8 @@ class Result(object):
         else:
             return False
 
-    def is_signal(self, (filename, lineno, funcname, text)):
+    def is_signal(self, stack_frame):
+        filename, lineno, funcname, text = stack_frame
         noise = {"forge/executor.py": ("run", "do_run", "_capture_stack"),
                  "forge/tasks.py": ("go", "__call__"),
                  "eventlet/greenthread.py": ("main",)}
@@ -142,7 +147,7 @@ class Result(object):
             if not stack:
                 stack = traceback.extract_tb(result.exception[2])
                 stack[:0] = result.stack
-            elif result.parent and result.executor.async:
+            elif result.parent and result.executor.is_async:
                 stack[:0] = result.stack
             result = result.parent
 
@@ -241,37 +246,37 @@ class executor(object):
         if result.value is ERROR:
             print result.exception
         else:
-            print result.value
+            print(result.value)
 
         # you can retrieve the result just as if you had run the
         # function
         try:
             x = result.get()
-            print x
-        except ZeroDivisionError, e:
-            print e
+            print(x)
+        except ZeroDivisionError as e:
+            print(e)
 
     An executor can also be used to run asynchronous tasks::
 
-        exe = executor("my-async-executor", async=True)
+        exe = executor("my-async-executor", is_async=True)
         result = exe.run(lambda x: x/0, 1)
         # the result is pending
         if result.value is PENDING:
-           print "still waiting..."
+           print("still waiting...")
 
         # block until the result is available
         result.wait()
 
         if result.value is ERROR:
-            print result.exception
+            print(result.exception)
         else:
-            print result.value
+            print(result.value)
 
     When executors are nested, any errors occuring in asynchronous
     tasks are tracked:
 
         def my_code():
-            exe = executor("sub-executor", async=True)
+            exe = executor("sub-executor", is_async=True)
             # lets launch a background task and ignore the result
             exe.run(lambda: 1/0)
 
@@ -344,10 +349,10 @@ class executor(object):
     def resize(cls, size):
         _POOL.resize(size)
 
-    def __init__(self, name = None, async=False):
+    def __init__(self, name = None, is_async=False):
         self.name = name
         self.results = []
-        self.async = async
+        self.is_async = is_async
         self.messages = []
 
         self.parent = self.current()
@@ -383,7 +388,7 @@ class executor(object):
         with self._make_current(None):
             msg = self.color(prefix) + text.replace(u"\n", u"\n" + self.color(prefix))
             if newline:
-                print msg
+                print(msg)
             else:
                 sys.stdout.write(msg)
 
@@ -417,7 +422,7 @@ class executor(object):
         result = Result(self, self.current_result())
         result._capture_stack()
         self.results.append(result)
-        if self.async:
+        if self.is_async:
             result.thread = _POOL.spawn(self.do_run, result, fun, args, kwargs)
         else:
             self.do_run(result, fun, args, kwargs)

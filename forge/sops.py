@@ -36,16 +36,16 @@ def edit_secret(secret_file_path, create):
         try:
             with open(secret_file_path, "w") as fd:
                 fd.write(content)
-        except IOError, e:
+        except IOError as e:
             raise TaskError(e)
     try:
         subprocess.check_call(["sops", "--input-type", "binary", "--output-type", "binary", secret_file_path])
-    except eventlet.green.subprocess.CalledProcessError, e:
+    except eventlet.green.subprocess.CalledProcessError as e:
         raise TaskError(e)
 
 def view_secret(secret_file_path):
     key_check()
     try:
         subprocess.check_call(["sops", "--output-type", "binary", "-d", secret_file_path])
-    except eventlet.green.subprocess.CalledProcessError, e:
+    except eventlet.green.subprocess.CalledProcessError as e:
         raise TaskError(e)

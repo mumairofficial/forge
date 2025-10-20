@@ -141,7 +141,7 @@ def test_service_yaml(error, content):
         load_service_yamls("test", content)
         if error is not None:
             assert False, "expected error: %s" % error
-    except TaskError, err:
+    except TaskError as err:
         if error is None:
             raise
         else:
@@ -303,11 +303,11 @@ def test_versioning():
 def test_nonexistent():
     try:
         Discovery(Forge()).search("thisfileshouldreallynotexist")
-    except TaskError, e:
+    except TaskError as e:
         assert "no such directory" in str(e)
 
 def test_nondirectory():
     try:
         Discovery(Forge()).search(__file__)
-    except TaskError, e:
+    except TaskError as e:
         assert "not a directory" in str(e)

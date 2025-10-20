@@ -60,7 +60,7 @@ def test_render_error():
     try:
         render(source, os.path.join(root, "template_err"), lambda x: True, hello="Hello", world="World")
         assert False, "should error"
-    except TaskError, e:
+    except TaskError as e:
         assert "template_err.in: 'foo' is undefined" in str(e)
 
 def test_renders():
@@ -70,12 +70,12 @@ def test_renders_err():
     try:
         renders("foo", "{{foo.bar}}")
         assert False, "should error"
-    except TaskError, e:
+    except TaskError as e:
         assert "foo: 'foo' is undefined" in str(e)
 
 def test_undefined_var():
 #    try:
         renders("foo", "hello {{nonexistent}}")
 #        assert False, "this should fail"
-#    except TaskError, e:
+#    except TaskError as e:
 #        assert "'nonexistent' is undefined" in str(e)

@@ -29,10 +29,10 @@ class Terminal(blessed.Terminal):
         # 'self.caps', unless 'MISMATCH'; then it is an unmatched character.
         self._caps_compiled_any = re.compile('|'.join(
             cap.named_pattern for name, cap in self.caps.items()
-        ) + '|(?P<MISMATCH>\w+|\W)')
+        ) + r'|(?P<MISMATCH>\w+|\W)')
         self._caps_unnamed_any = re.compile('|'.join(
             '({0})'.format(cap.pattern) for name, cap in self.caps.items()
-        ) + '|(\w+|\W)')
+        ) + r'|(\w+|\W)')
 
         self._wrap_cache = {}
 

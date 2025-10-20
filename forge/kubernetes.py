@@ -18,7 +18,7 @@ from forge.match import match
 from forge.yamlutil import MappingNode, Node, as_node, compose, compose_all, serialize_all, view
 from forge import yamlutil
 
-@match(MappingNode, basestring, dict)
+@match(MappingNode, str, dict)
 def fixup(node, key, pairs):
     node = view(node)
     kind = node.get("kind")
@@ -35,7 +35,7 @@ def fixup(node, key, pairs):
         for k, v in pairs.items():
             orig[k] = as_node(v)
 
-@match(Node, basestring, dict)
+@match(Node, str, dict)
 def fixup(*args):
     pass
 
@@ -99,7 +99,7 @@ def status_summary(kind, status):
         result.append("NOT READY(%s)" % ", ".join(not_ready))
     return ", ".join(result)
 
-@match(basestring, object)
+@match(str, object)
 def status_summary(kind, status):
     return str(status)
 

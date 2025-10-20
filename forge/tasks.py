@@ -252,7 +252,7 @@ class decorator(object):
         return result.get()
 
     def go(self, *args, **kwargs):
-        exe = executor(self.task._context(args, kwargs), async=True)
+        exe = executor(self.task._context(args, kwargs), is_async=True)
         result = exe.run(self.task.function, *self._munge(args), **kwargs)
         return result
 
@@ -394,7 +394,7 @@ def sh(*args, **kwargs):
             task.info(line_buffer.pop(0))
         p.wait()
         result = SHResult(command, p.returncode, output)
-    except OSError, e:
+    except OSError as e:
         raise TaskError("error executing command '%s': %s" % (command, e))
     if p.returncode in expected:
         return result
@@ -407,7 +407,7 @@ def json_patch(response, parser):
     def patched():
         try:
             return parser()
-        except ValueError, e:
+        except ValueError as e:
             task.echo("== response could not be parsed as JSON ==")
             task.echo(response.content)
             raise
@@ -420,7 +420,7 @@ def get(url, **kwargs):
         response = requests.get(str(url), **kwargs)
         response.json = json_patch(response, response.json)
         return response
-    except requests.RequestException, e:
+    except requests.RequestException as e:
         raise TaskError(e)
 
 import watchdog, watchdog.events

@@ -342,7 +342,7 @@ class ECRDocker(DockerBase):
         try:
             self.ecr.create_repository(repositoryName=name)
             task.info('repository {} created'.format(name))
-        except self.ecr.exceptions.RepositoryAlreadyExistsException, e:
+        except self.ecr.exceptions.RepositoryAlreadyExistsException as e:
             task.info('repository {} already exists'.format(name))
 
     @task()
@@ -354,9 +354,9 @@ class ECRDocker(DockerBase):
                                                  imageIds=[{'imageTag': version}])
             tags = set([t for id in response['imageDetails'] for t in id['imageTags']])
             return version in tags
-        except self.ecr.exceptions.ImageNotFoundException, e:
+        except self.ecr.exceptions.ImageNotFoundException as e:
             return False
-        except self.ecr.exceptions.RepositoryNotFoundException, e:
+        except self.ecr.exceptions.RepositoryNotFoundException as e:
             return False
 
 class LocalDocker(DockerBase):

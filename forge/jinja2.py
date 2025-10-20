@@ -25,7 +25,7 @@ class WarnUndefined(Undefined):
     def warn(self):
         try:
             self._fail_with_undefined_error()
-        except UndefinedError, e:
+        except UndefinedError as e:
             msg = str(e)
         task.echo(task.terminal().bold_red("warning: %s (this will become an error soon)" % msg))
 
@@ -68,9 +68,9 @@ class WarnUndefined(Undefined):
 def _do_render(env, root, name, variables):
     try:
         return env.get_template(name).render(**variables)
-    except TemplateNotFound, e:
+    except TemplateNotFound as e:
         raise TaskError("%s/%s: %s" % (root, name, "template not found"))
-    except TemplateError, e:
+    except TemplateError as e:
         raise TaskError("%s/%s: %s" % (root, name, e))
 
 @task()
@@ -129,5 +129,5 @@ def renders(name, source, **variables):
     """
     try:
         return Template(source, undefined=WarnUndefined).render(**variables)
-    except TemplateError, e:
+    except TemplateError as e:
         raise TaskError("%s: %s" % (name, e))

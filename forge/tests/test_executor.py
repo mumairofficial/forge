@@ -30,7 +30,7 @@ def test_sync_executor():
     assert elapsed > 0.9, elapsed
 
 def test_async_executor():
-    exe = executor("async", async=True)
+    exe = executor("async", is_async=True)
     start = time.time()
     exe.run(sleeper, 0.5)
     exe.run(sleeper, 0.5)
