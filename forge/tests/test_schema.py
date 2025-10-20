@@ -56,7 +56,7 @@ def test_unknown_field():
     try:
         s.load("test", yaml.dump(obj))
         assert False, "should have errored"
-    except SchemaError, e:
+    except SchemaError as e:
         assert "no such field: bar" in str(e)
 
 def test_missing_field():
@@ -70,7 +70,7 @@ def test_missing_field():
     obj = {"bar": "asdf"}
     try:
         s.load("test", yaml.dump(obj))
-    except SchemaError, e:
+    except SchemaError as e:
         assert "required field 'foo' is missing" in str(e)
 
 def test_default_field():
@@ -145,7 +145,7 @@ def test_scalar_validation(cls, input, error):
     try:
         s.load("test", input)
         assert False, "expecting error"
-    except SchemaError, e:
+    except SchemaError as e:
         assert error in str(e)
 
 def test_generic_class():
@@ -183,7 +183,7 @@ def test_ambiguous_union(input, error):
     try:
         input()
         assert False, "expected error: %s" % error
-    except ValueError, e:
+    except ValueError as e:
         assert error in str(e), e
 
 ABC = Union(String(),
@@ -224,5 +224,5 @@ def test_union_error(schema, input, error):
     try:
         schema.load("test", input)
         assert False, "expected error: %s" % error
-    except SchemaError, e:
+    except SchemaError as e:
         assert error in str(e)

@@ -298,19 +298,19 @@ def list(forge, service_pattern, profile_pattern):
         if first:
             first = False
         else:
-            print
+            print()
 
         header = "{0}[{1}]: {2} | {3} | {4}".format(bold(service), bold(profile), repo or "(none)", descriptor,
                                                      version)
-        print header
+        print(header)
 
         for resource in sorted(resources):
             ver = resource["version"]
             if ver != version:
                 red_ver = red(ver)
-                print "  {kind} {namespace}.{name} {0}:\n    {status}".format(red_ver, **resource)
+                print("  {kind} {namespace}.{name} {0}:\n    {status}".format(red_ver, **resource))
             else:
-                print "  {kind} {namespace}.{name}:\n    {status}".format(**resource)
+                print("  {kind} {namespace}.{name}:\n    {status}".format(**resource))
 
 @forge.command()
 @click.pass_obj

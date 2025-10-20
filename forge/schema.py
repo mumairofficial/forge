@@ -499,7 +499,7 @@ class Class(Schema):
                     loaded[key] = f.default
         try:
             return self.constructor(**loaded)
-        except SchemaError, e:
+        except SchemaError as e:
             raise SchemaError("%s\n\n%s" % (e, node.start_mark))
 
     @property
@@ -519,12 +519,12 @@ class Class(Schema):
             if isinstance(t, Class):
                 types[t] = t.render()
         for k, v in types.items():
-            print '<div id="%s">' % k.name.replace(":", "_")
-            print '<h2>%s</h2>' % k.name
-            print
-            print v
-            print
-            print '</div>'
+            print('<div id="%s">' % k.name.replace(":", "_"))
+            print('<h2>%s</h2>' % k.name)
+            print()
+            print(v)
+            print()
+            print('</div>')
 
     def render(self):
         result = []

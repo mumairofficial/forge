@@ -375,7 +375,7 @@ def test_many_min1():
     try:
         min1()
         assert False
-    except TypeError, e:
+    except TypeError as e:
         assert "do not match" in str(e)
     assert min1(1) == 1
     assert min1(1, 2) == 1
@@ -389,7 +389,7 @@ def test_many_min3():
         try:
             min3(*range(i))
             assert False
-        except TypeError, e:
+        except TypeError as e:
             assert "do not match" in str(e)
     assert min3(1, 2, 3) == 1
     assert min3(1, 2, 3, 4) == 1

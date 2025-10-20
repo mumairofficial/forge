@@ -54,7 +54,7 @@ def test_failure_sync():
     try:
         oops(3)
         assert False, "should have failed"
-    except ZeroDivisionError, e:
+    except ZeroDivisionError as e:
         pass
 
 def test_failure_async():
@@ -67,7 +67,7 @@ def test_failure_async():
     try:
         exe.get()
         assert False, "should have failed"
-    except ZeroDivisionError, e:
+    except ZeroDivisionError as e:
         pass
 
 @task()
@@ -78,7 +78,7 @@ def test_background_failure():
     try:
         background_oops(1)
         assert False, "should have failed"
-    except ChildError, e:
+    except ChildError as e:
         assert "1 child task(s) errored" == str(e)
         pass
 
@@ -104,7 +104,7 @@ def test_sync_error():
     try:
         sync_error()
         assert False, "this should fail"
-    except ChildError, e:
+    except ChildError as e:
         assert "1 child task(s) errored" == str(e)
 
 class Filter(object):
@@ -185,13 +185,13 @@ def test_sh():
 def test_sh_nonexist():
     try:
         sh("nonexistent-command")
-    except TaskError, e:
+    except TaskError as e:
         assert 'error executing command' in str(e)
 
 def test_sh_error():
     try:
         sh("ls", "nonexistentfile")
-    except TaskError, e:
+    except TaskError as e:
         assert "command 'ls nonexistentfile' failed" in str(e)
 
 def test_sh_expected_error():

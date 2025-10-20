@@ -47,7 +47,7 @@ def test_exists():
     try:
         unauth_gh.exists("https://github.com/forgeorg/nosuchrepo.git")
         assert False
-    except TaskError, e:
+    except TaskError as e:
         assert "Authentication failed" in str(e)
 
 def test_clone():

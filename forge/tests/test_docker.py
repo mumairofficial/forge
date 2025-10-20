@@ -34,7 +34,7 @@ def test_remote_exists_auth_failed():
     dr = Docker(registry, "forgetest", "nosuchuser", "badpassword")
     try:
         dr.remote_exists("nonexistent", "nosuchversion")
-    except TaskError, e:
+    except TaskError as e:
         assert ("problem authenticating" in str(e)) or ("unauthorized" in str(e))
 
 def test_validate():
@@ -118,7 +118,7 @@ def test_build_error():
     version = "t%s" % START_TIME
     try:
         dr.build(directory, os.path.join(directory, "Dockerfile"), name, version, {})
-    except TaskError, e:
+    except TaskError as e:
         msg = str(e)
         assert "command 'docker build" in msg
         assert "nknown instruction: XXXFROM" in msg

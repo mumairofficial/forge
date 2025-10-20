@@ -105,6 +105,6 @@ def test_apply_bad():
     kube = Kubernetes()
     try:
         kube.apply(os.path.join(directory, "k8s"))
-    except TaskError, e:
+    except TaskError as e:
         assert "error" in str(e)
         assert "xxx" in str(e)
