@@ -16,7 +16,7 @@ import os
 from tempfile import mkdtemp
 from forge.match import match
 
-@match(basestring)
+@match(str)
 def mktree(treespec, **substitutions):
     files = parse_treespec(treespec)
     return mktree(files, **substitutions)
@@ -63,7 +63,7 @@ import re
 from forge.output import Terminal
 
 TOKENS = (
-    ("VERSION", ur'\b[0-9a-fA-F]{40}\.(sha|git)'),
+    ("VERSION", r'\b[0-9a-fA-F]{40}\.(sha|git)'),
 )
 
 def tokenize(s):

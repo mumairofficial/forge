@@ -15,7 +15,7 @@
 from yaml import ScalarNode, SequenceNode, MappingNode, CollectionNode, Node, compose, compose_all, serialize, \
     serialize_all
 from forge.match import choice, match, many
-from StringIO import StringIO
+from io import StringIO
 
 from .schema import _scalar2py
 
@@ -102,11 +102,11 @@ def as_node(v):
 def as_node(n):
     return n
 
-@match(basestring)
+@match(str)
 def as_node(s):
     return ScalarNode(u'tag:yaml.org,2002:str', s)
 
-@match(choice(int,long))
+@match(int)
 def as_node(s):
     return ScalarNode(u'tag:yaml.org,2002:int', str(s))
 
@@ -184,13 +184,13 @@ class ListView(View):
     def __repr__(self):
         return repr([v for v in self])
 
-@match(basestring, basestring)
+@match(str, str)
 def load(name, content):
     stream = StringIO(content)
     stream.name = name
     return _load(stream)
 
-@match(basestring)
+@match(str)
 def load(name):
     with open(name) as f:
         return _load(f)

@@ -41,7 +41,7 @@ class Baz(object):
     pass
 
 def say(x):
-    print x
+    print(x)
 
 def test_giant_switch():
 
@@ -274,7 +274,7 @@ def test_lazy():
 
 class Hasher(object):
 
-    @match(basestring)
+    @match(str)
     def __init__(self, name):
         self.name = name
 
@@ -322,7 +322,7 @@ def test_empty_choice():
     assert empty_choice() == 1
     assert empty_choice(3) == 2
 
-@match(choice(basestring))
+@match(choice(str))
 def nested_choice(n):
     return 1
 
@@ -359,7 +359,7 @@ class Traitor(object):
 def execute(t):
     return 1
 
-@match(basestring)
+@match(str)
 def execute(x):
     return 2
 

@@ -450,7 +450,7 @@ class _BoundDispatcher(object):
                 return compiled.apply(*args, **kwargs)
             else:
                 return compiled.apply(self.object, *args, **kwargs)
-        except MatchError, e:
+        except MatchError as e:
             raise TypeError("%s.%s() %s" % (self.clazz.__name__, self.dispatcher.name, e))
 
     def match(self, *args, **kwargs):
@@ -497,7 +497,7 @@ class _Dispatcher(object):
         compiled = self._compiled
         try:
             return compiled.apply(*args, **kwargs)
-        except MatchError, e:
+        except MatchError as e:
             raise TypeError("%s() %s" % (self.name, e))
 
     def match(self, *args, **kwargs):

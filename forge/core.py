@@ -287,7 +287,7 @@ class Forge(object):
 
         try:
             conf = config.load(self.config)
-        except config.SchemaError, e:
+        except config.SchemaError as e:
             raise TaskError(str(e))
 
         self.base = os.path.dirname(os.path.abspath(self.config))
@@ -319,7 +319,7 @@ class Forge(object):
             raise TaskError("no service found")
         else:
             svc = self.discovery.services[services[0]]
-            print(yaml.dump(svc.metadata(), encoding='utf-8'))
+            print(yaml.dump(svc.metadata()))
 
     @task()
     def clean(self, service):

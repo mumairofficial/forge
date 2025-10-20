@@ -368,9 +368,9 @@ def call_main():
     util.setup_yaml()
     try:
         exit(forge())
-    except TaskError, e:
+    except TaskError as e:
         exit(e)
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt as e:
         exit(e)
 
 if __name__ == "__main__":
